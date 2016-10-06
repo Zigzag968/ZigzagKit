@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 s.name             = 'ZigzagKit'
-s.version          = '0.1.3'
+s.version          = '0.1.4'
 s.summary          = 'UIKit helpers & components for iOS'
 
 s.description      = <<-DESC
@@ -10,7 +10,7 @@ DESC
 s.homepage         = 'https://github.com/Zigzag968/ZigzagKit'
 s.license          = { :type => 'MIT', :file => 'LICENSE' }
 s.author           = { 'Alexandre Guibert' => 'alexandre968@hotmail.com' }
-s.source           = { :git => 'https://github.com/Zigzag968/ZigzagKit', :tag => 'v0.1.3' }
+s.source           = { :git => 'https://github.com/Zigzag968/ZigzagKit', :tag => 'v0.1.4' }
 
 s.ios.deployment_target = '8.0'
 
