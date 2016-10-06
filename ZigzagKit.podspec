@@ -15,3 +15,5 @@ s.source           = { :git => 'https://github.com/Zigzag968/ZigzagKit', :tag =>
 s.ios.deployment_target = '8.0'
 
 s.source_files = 'ZigzagKit/Classes/**/*'
+
+end
