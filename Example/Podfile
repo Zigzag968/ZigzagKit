@@ -2,6 +2,7 @@ use_frameworks!
 
 target 'ZigzagKit_Example' do
   pod 'ZigzagKit', :path => '../'
+  pod 'ZGTooltipView'
 
   target 'ZigzagKit_Tests' do
     inherit! :search_paths
