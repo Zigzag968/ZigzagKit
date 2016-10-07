@@ -1,5 +1,7 @@
 PODS:
-  - ZigzagKit (0.1.0)
+  - ZGTooltipView (1.2.8)
+  - ZigzagKit (0.1.1):
+    - ZGTooltipView (= 1.2.8)
 
 DEPENDENCIES:
   - ZigzagKit (from `../`)
@@ -9,7 +11,8 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  ZigzagKit: 96fcedefade35014dada4381aababd1a7a9b2158
+  ZGTooltipView: 7bdc12c12ea73d8fce4d4b53abcd2b5a9e25d6e9
+  ZigzagKit: feca1a8c17af7dfd08c3d225d06e65d2f0d6420a
 
 PODFILE CHECKSUM: 2eea49cc9983fa17308deb65b6fda871bf0ae996
 

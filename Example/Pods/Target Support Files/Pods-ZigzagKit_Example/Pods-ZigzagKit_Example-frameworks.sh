@@ -84,8 +84,10 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_framework "$BUILT_PRODUCTS_DIR/ZGTooltipView/ZGTooltipView.framework"
   install_framework "$BUILT_PRODUCTS_DIR/ZigzagKit/ZigzagKit.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_framework "$BUILT_PRODUCTS_DIR/ZGTooltipView/ZGTooltipView.framework"
   install_framework "$BUILT_PRODUCTS_DIR/ZigzagKit/ZigzagKit.framework"
 fi
