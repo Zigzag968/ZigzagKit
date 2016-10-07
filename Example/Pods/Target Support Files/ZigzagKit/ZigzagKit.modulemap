@@ -1,0 +1,6 @@
+framework module ZigzagKit {
+  umbrella header "ZigzagKit-umbrella.h"
+
+  export *
+  module * { export * }
+}

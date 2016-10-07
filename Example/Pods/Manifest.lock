@@ -1,0 +1,16 @@
+PODS:
+  - ZigzagKit (0.1.0)
+
+DEPENDENCIES:
+  - ZigzagKit (from `../`)
+
+EXTERNAL SOURCES:
+  ZigzagKit:
+    :path: ../
+
+SPEC CHECKSUMS:
+  ZigzagKit: 96fcedefade35014dada4381aababd1a7a9b2158
+
+PODFILE CHECKSUM: 2eea49cc9983fa17308deb65b6fda871bf0ae996
+
+COCOAPODS: 1.1.0.rc.2
