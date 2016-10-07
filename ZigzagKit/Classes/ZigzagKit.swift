@@ -14,7 +14,7 @@ private var invisibleNavigationBarKey: UInt8 = 0
 private var navigationItemDelegateKey: UInt8 = 0
 
 @objc
-public protocol AppNavigationItemDelegate : NSObjectProtocol {
+public protocol ZGNavigationItemDelegate : NSObjectProtocol {
      func viewController(viewController:UIViewController, shouldDisplayBackButton button:UIBarButtonItem) -> Bool
     
     /**
@@ -67,9 +67,9 @@ extension UIViewController {
     }
     
     
-    public var navigationItemDelegate: AppNavigationItemDelegate? {
+    public var navigationItemDelegate: ZGNavigationItemDelegate? {
         get {
-            return objc_getAssociatedObject(self, &navigationItemDelegateKey) as? AppNavigationItemDelegate
+            return objc_getAssociatedObject(self, &navigationItemDelegateKey) as? ZGNavigationItemDelegate
         }
         set(newValue) {
             objc_setAssociatedObject(self, &navigationItemDelegateKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
@@ -136,16 +136,16 @@ extension UITableView {
     
 }
 
-class ZGContentView : UIView {
+public class ZGContentView : UIView {
     
     enum Edge : Int { case top, left, right, bottom }
     
-    let contentView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+    public let contentView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
     
     private(set) var edgesConstraints = [Edge:NSLayoutConstraint]()
     private var maskingViewController : UIViewController!
     
-    required init(viewController:UIViewController) {
+    required public init(viewController:UIViewController) {
         super.init(frame: CGRectZero)
         self.maskingViewController = viewController
         setup()
@@ -169,15 +169,15 @@ class ZGContentView : UIView {
         }
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
-    override func addSubview(view: UIView) {
+    override public func addSubview(view: UIView) {
         self.contentView.addSubview(view)
     }
     
-    override func didMoveToSuperview() {
+    override public func didMoveToSuperview() {
         super.didMoveToSuperview()
         
         let topGuideConstraint = NSLayoutConstraint(item: self.contentView, attribute: .Top, relatedBy: .GreaterThanOrEqual, toItem: maskingViewController.topLayoutGuide, attribute: .Bottom, multiplier: 1, constant: 0)
