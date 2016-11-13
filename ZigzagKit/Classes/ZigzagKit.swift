@@ -133,7 +133,17 @@ extension UITableView {
         
         return self.dequeueReusableCellWithIdentifier(Cell.reuseIdentifier, forIndexPath: indexPath) as! Cell
     }
+}
+
+extension UICollectionView {
+    public func registerClass<Cell:AnyObject where Cell:ReusableCell>(cellClass: Cell.Type?) {
+        self.registerClass(cellClass.self, forCellWithReuseIdentifier: Cell.reuseIdentifier)
+    }
     
+    public func dequeueReusableCellWithClass<Cell:AnyObject where Cell:ReusableCell>(cellClass: Cell.Type, forIndexPath indexPath: NSIndexPath) -> Cell {
+        
+        return self.dequeueReusableCellWithReuseIdentifier(Cell.reuseIdentifier, forIndexPath: indexPath) as! Cell
+    }
 }
 
 public class ZGContentView : UIView {
