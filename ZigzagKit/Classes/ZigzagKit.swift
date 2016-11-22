@@ -126,8 +126,8 @@ public protocol ReusableCell : class {
 
 extension UITableView {
     
-    public func registerNibForClass<Cell:AnyObject where Cell:ReusableCell>(cellClass: Cell.Type?) {
-        self.registerNib(UINib(nibName: String(cellClass!), bundle: nil), forCellReuseIdentifier: Cell.reuseIdentifier)
+    public func registerNibForClass<Cell:AnyObject where Cell:ReusableCell>(cellClass: Cell.Type?, nibName:String?=nil) {
+        self.registerNib(UINib(nibName: nibName ?? String(cellClass!), bundle: nil), forCellReuseIdentifier: Cell.reuseIdentifier)
     }
     
     public func registerClass<Cell:AnyObject where Cell:ReusableCell>(cellClass: Cell.Type?) {
@@ -142,8 +142,8 @@ extension UITableView {
 
 extension UICollectionView {
     
-    public func registerNibForClass<Cell:AnyObject where Cell:ReusableCell>(cellClass: Cell.Type?) {
-        self.registerNib(UINib(nibName: String(cellClass!), bundle: nil), forCellWithReuseIdentifier: Cell.reuseIdentifier)
+    public func registerNibForClass<Cell:AnyObject where Cell:ReusableCell>(cellClass: Cell.Type?, nibName:String?=nil) {
+        self.registerNib(UINib(nibName: nibName ?? String(cellClass!), bundle: nil), forCellWithReuseIdentifier: Cell.reuseIdentifier)
     }
     
     public func registerClass<Cell:AnyObject where Cell:ReusableCell>(cellClass: Cell.Type?) {
