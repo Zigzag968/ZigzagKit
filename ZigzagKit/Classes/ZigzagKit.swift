@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import PropertyExtensions
 
 private var hideNavigationBarKey: UInt8 = 0
 private var invisibleNavigationBarKey: UInt8 = 0
@@ -122,6 +123,68 @@ extension Storyboarded  {
 
 public protocol ReusableCell : class {
      static func reuseIdentifier() -> String
+}
+
+extension UIScrollView : PropertyExtensions {
+    var _beforeAdjustTopInset : CGFloat? {
+        get { return self.getProperty("_beforeAdjustTopInset") }
+        set { self.setValue(newValue, forProperty: "_beforeAdjustTopInset") }
+    }
+    
+    var _beforeAdjustBottomInset : CGFloat? {
+        get { return self.getProperty("_beforeAdjustBottomInset") }
+        set { self.setValue(newValue, forProperty: "_beforeAdjustBottomInset") }
+    }
+    
+    public enum Edge {
+        case Top, Bottom
+    }
+    
+    private func adjustInsetEdgeWithLayoutGuide(layoutGuide:UILayoutSupport, edge:Edge) {
+        
+        let inset = layoutGuide.length
+        setInsetForEdge(inset, edge: edge)
+    }
+    
+    private func setInsetForEdge(inset:CGFloat, edge:Edge) {
+        
+        var insets = self.contentInset
+        
+        switch edge {
+        case .Top:
+            _beforeAdjustTopInset = _beforeAdjustTopInset ?? insets.top
+            insets.top = inset + _beforeAdjustTopInset!
+            break
+        case .Bottom:
+            _beforeAdjustBottomInset = _beforeAdjustBottomInset ?? insets.bottom
+            insets.bottom = inset + _beforeAdjustBottomInset!
+            break
+        }
+        
+        self.contentInset = insets
+        self.scrollIndicatorInsets = insets
+    }
+    
+    public func adjustBottomInsetsWithBottomLayoutGuide(layoutGuide:UILayoutSupport) {
+        self.adjustInsetEdgeWithLayoutGuide(layoutGuide, edge: .Bottom)
+    }
+    
+    public func adjustTopInsetsWithTopLayoutGuide(layoutGuide:UILayoutSupport) {
+        self.adjustInsetEdgeWithLayoutGuide(layoutGuide, edge: .Top)
+    }
+    
+    public func setTopInset(inset:CGFloat) {
+        self.setInsetForEdge(inset, edge: .Top)
+    }
+    
+    public func setBottomInset(inset:CGFloat) {
+        self.setInsetForEdge(inset, edge: .Bottom)
+    }
+    
+    public func scrollToBottom() {
+        let bottomOffset = CGPoint(x: 0, y: self.contentSize.height - self.bounds.size.height)
+        self.setContentOffset(bottomOffset, animated: true)
+    }
 }
 
 extension UITableView {
