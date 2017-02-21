@@ -122,8 +122,8 @@ extension Storyboarded  {
 }
 
 public protocol ReusableCell : class {
-    static func reuseIdentifier() -> String
-    static func nibName() -> String?
+    static var reuseIdentifier : String { get }
+    static var cellNibName : String? { get }
 }
 
 extension UIScrollView : PropertyExtensions {
@@ -193,32 +193,32 @@ extension UIScrollView : PropertyExtensions {
 extension UITableView {
     
     public func registerNibForClass<Cell:AnyObject where Cell:ReusableCell>(cellClass: Cell.Type?, nibName:String?=nil) {
-        self.registerNib(UINib(nibName: nibName ?? Cell.nibName() ?? String(cellClass!), bundle: nil), forCellReuseIdentifier: Cell.reuseIdentifier())
+        self.registerNib(UINib(nibName: nibName ?? Cell.cellNibName ?? String(cellClass!), bundle: nil), forCellReuseIdentifier: Cell.reuseIdentifier)
     }
     
     public func registerClass<Cell:AnyObject where Cell:ReusableCell>(cellClass: Cell.Type?) {
-        self.registerClass(cellClass.self, forCellReuseIdentifier: Cell.reuseIdentifier())
+        self.registerClass(cellClass.self, forCellReuseIdentifier: Cell.reuseIdentifier)
     }
     
     public func dequeueReusableCellWithClass<Cell:AnyObject where Cell:ReusableCell>(cellClass: Cell.Type, forIndexPath indexPath: NSIndexPath) -> Cell {
         
-        return self.dequeueReusableCellWithIdentifier(Cell.reuseIdentifier(), forIndexPath: indexPath) as! Cell
+        return self.dequeueReusableCellWithIdentifier(Cell.reuseIdentifier, forIndexPath: indexPath) as! Cell
     }
 }
 
 extension UICollectionView {
     
     public func registerNibForClass<Cell:AnyObject where Cell:ReusableCell>(cellClass: Cell.Type?, nibName:String?=nil) {
-        self.registerNib(UINib(nibName: nibName ?? Cell.nibName() ?? String(cellClass!), bundle: nil), forCellWithReuseIdentifier: Cell.reuseIdentifier())
+        self.registerNib(UINib(nibName: nibName ?? Cell.cellNibName ?? String(cellClass!), bundle: nil), forCellWithReuseIdentifier: Cell.reuseIdentifier)
     }
     
     public func registerClass<Cell:AnyObject where Cell:ReusableCell>(cellClass: Cell.Type?) {
-        self.registerClass(cellClass.self, forCellWithReuseIdentifier: Cell.reuseIdentifier())
+        self.registerClass(cellClass.self, forCellWithReuseIdentifier: Cell.reuseIdentifier)
     }
     
     public func dequeueReusableCellWithClass<Cell:AnyObject where Cell:ReusableCell>(cellClass: Cell.Type, forIndexPath indexPath: NSIndexPath) -> Cell {
         
-        return self.dequeueReusableCellWithReuseIdentifier(Cell.reuseIdentifier(), forIndexPath: indexPath) as! Cell
+        return self.dequeueReusableCellWithReuseIdentifier(Cell.reuseIdentifier, forIndexPath: indexPath) as! Cell
     }
 }
 
