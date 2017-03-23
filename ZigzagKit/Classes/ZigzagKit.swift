@@ -16,7 +16,17 @@ private var navigationItemDelegateKey: UInt8 = 0
 
 @objc
 public protocol ZGNavigationItemDelegate : NSObjectProtocol {
-     func viewController(viewController:UIViewController, shouldDisplayBackButton button:UIBarButtonItem) -> Bool
+    func viewController(viewController:UIViewController, shouldDisplayBackButton button:UIBarButtonItem) -> Bool
+    
+    /**
+     viewControllerShouldDismiss
+     
+     This method is a delegate for showPreviousController() that needs to be called before
+     
+     - Parameter viewController: The viewController to dismiss
+     
+     */
+    func viewControllerShouldDismiss(viewController:UIViewController, block:(Bool)->())
     
     /**
      backButtonForViewController
@@ -25,8 +35,8 @@ public protocol ZGNavigationItemDelegate : NSObjectProtocol {
      
      - Returns: Un UIBarbuttonItem pouvant overridé celui par défaut
      */
-     func backButtonForViewController(viewController:UIViewController) -> UIBarButtonItem?
-     optional func backButtonColorForViewController(viewController:UIViewController) -> UIColor?
+    func backButtonForViewController(viewController:UIViewController) -> UIBarButtonItem?
+    optional func backButtonColorForViewController(viewController:UIViewController) -> UIColor?
     
 }
 
@@ -86,22 +96,34 @@ extension UIViewController {
         
         return topController
     }
+    
     public func showPreviousController(animated:Bool = true, completionBlock: ((previousController:UIViewController?) -> Void)? = nil) {
-        if let navC = self.navigationController {
-            
-            CATransaction.begin()
-            CATransaction.setCompletionBlock({ () -> Void in
-                let vc = navC.viewControllers.last
-                completionBlock?(previousController: vc)
-            })
-            navC.popViewControllerAnimated(animated)
-            CATransaction.commit()
+        
+        func dismiss() {
+            if let navC = self.navigationController {
+                CATransaction.begin()
+                CATransaction.setCompletionBlock({ () -> Void in
+                    let vc = navC.viewControllers.last
+                    completionBlock?(previousController: vc)
+                })
+                navC.popViewControllerAnimated(animated)
+                CATransaction.commit()
+            }
+            else if let presentingViewController = self.presentingViewController {
+                presentingViewController.dismissViewControllerAnimated(animated, completion: { () -> Void in
+                    completionBlock?(previousController: presentingViewController)
+                })
+            }
         }
-        else if let presentingViewController = self.presentingViewController {
-            presentingViewController.dismissViewControllerAnimated(animated, completion: { () -> Void in
-                completionBlock?(previousController: presentingViewController)
+        
+        if let delegate = self.navigationItemDelegate {
+            delegate.viewControllerShouldDismiss(self, block: { (should) in
+                if should { dismiss() }
             })
+        } else {
+            dismiss()
         }
+        
     }
 }
 
@@ -109,9 +131,9 @@ public protocol Storyboarded : NSObjectProtocol {
     
     associatedtype VCType = Self
     
-     static func createFromStoryboard() -> VCType
-     static var storyboardName : String { get }
-     static var storyboardViewControllerIdentifier : String { get }
+    static func createFromStoryboard() -> VCType
+    static var storyboardName : String { get }
+    static var storyboardViewControllerIdentifier : String { get }
 }
 
 extension Storyboarded  {
@@ -294,14 +316,14 @@ extension UIView {
             addSubview(top)
             addConstraints(
                 NSLayoutConstraint.constraintsWithVisualFormat("V:|-(0)-[top(==thickness)]",
-                                                               options: [],
-                                                               metrics: ["thickness": thickness],
-                                                               views: ["top": top]))
+                    options: [],
+                    metrics: ["thickness": thickness],
+                    views: ["top": top]))
             addConstraints(
                 NSLayoutConstraint.constraintsWithVisualFormat("H:|-(0)-[top]-(0)-|",
-                                                               options: [],
-                                                               metrics: nil,
-                                                               views: ["top": top]))
+                    options: [],
+                    metrics: nil,
+                    views: ["top": top]))
             borders.append(top)
         }
         
@@ -310,14 +332,14 @@ extension UIView {
             addSubview(left)
             addConstraints(
                 NSLayoutConstraint.constraintsWithVisualFormat("H:|-(0)-[left(==thickness)]",
-                                                               options: [],
-                                                               metrics: ["thickness": thickness],
-                                                               views: ["left": left]))
+                    options: [],
+                    metrics: ["thickness": thickness],
+                    views: ["left": left]))
             addConstraints(
                 NSLayoutConstraint.constraintsWithVisualFormat("V:|-(0)-[left]-(0)-|",
-                                                               options: [],
-                                                               metrics: nil,
-                                                               views: ["left": left]))
+                    options: [],
+                    metrics: nil,
+                    views: ["left": left]))
             borders.append(left)
         }
         
@@ -326,14 +348,14 @@ extension UIView {
             addSubview(right)
             addConstraints(
                 NSLayoutConstraint.constraintsWithVisualFormat("H:[right(==thickness)]-(0)-|",
-                                                               options: [],
-                                                               metrics: ["thickness": thickness],
-                                                               views: ["right": right]))
+                    options: [],
+                    metrics: ["thickness": thickness],
+                    views: ["right": right]))
             addConstraints(
                 NSLayoutConstraint.constraintsWithVisualFormat("V:|-(0)-[right]-(0)-|",
-                                                               options: [],
-                                                               metrics: nil,
-                                                               views: ["right": right]))
+                    options: [],
+                    metrics: nil,
+                    views: ["right": right]))
             borders.append(right)
         }
         
@@ -342,14 +364,14 @@ extension UIView {
             addSubview(bottom)
             addConstraints(
                 NSLayoutConstraint.constraintsWithVisualFormat("V:[bottom(==thickness)]-(0)-|",
-                                                               options: [],
-                                                               metrics: ["thickness": thickness],
-                                                               views: ["bottom": bottom]))
+                    options: [],
+                    metrics: ["thickness": thickness],
+                    views: ["bottom": bottom]))
             addConstraints(
                 NSLayoutConstraint.constraintsWithVisualFormat("H:|-(0)-[bottom]-(0)-|",
-                                                               options: [],
-                                                               metrics: nil,
-                                                               views: ["bottom": bottom]))
+                    options: [],
+                    metrics: nil,
+                    views: ["bottom": bottom]))
             borders.append(bottom)
         }
         
