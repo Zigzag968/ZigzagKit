@@ -16,7 +16,7 @@ private var navigationItemDelegateKey: UInt8 = 0
 
 @objc
 public protocol ZGNavigationItemDelegate : NSObjectProtocol {
-    func viewController(viewController:UIViewController, shouldDisplayBackButton button:UIBarButtonItem) -> Bool
+    optional func viewController(viewController:UIViewController, shouldDisplayBackButton button:UIBarButtonItem) -> Bool
     
     /**
      viewControllerShouldDismiss
@@ -26,7 +26,7 @@ public protocol ZGNavigationItemDelegate : NSObjectProtocol {
      - Parameter viewController: The viewController to dismiss
      
      */
-    func viewControllerShouldDismiss(viewController:UIViewController, block:(Bool)->())
+    optional func viewControllerShouldDismiss(viewController:UIViewController, block:(Bool)->())
     
     /**
      backButtonForViewController
@@ -35,7 +35,7 @@ public protocol ZGNavigationItemDelegate : NSObjectProtocol {
      
      - Returns: Un UIBarbuttonItem pouvant overridé celui par défaut
      */
-    func backButtonForViewController(viewController:UIViewController) -> UIBarButtonItem?
+    optional func backButtonForViewController(viewController:UIViewController) -> UIBarButtonItem?
     optional func backButtonColorForViewController(viewController:UIViewController) -> UIColor?
     
 }
@@ -99,8 +99,10 @@ extension UIViewController {
     
     public func showPreviousController(animated:Bool = true, completionBlock: ((previousController:UIViewController?) -> Void)? = nil) {
         
+        // let topMostViewController = self.navigationController?.viewControllers.last ?? self.presentedViewController
+        
         func dismiss() {
-            if let navC = self.navigationController {
+            if let navC = self.navigationController where navC.viewControllers.count > 1 && navC.topViewController == self {
                 CATransaction.begin()
                 CATransaction.setCompletionBlock({ () -> Void in
                     let vc = navC.viewControllers.last
@@ -116,14 +118,18 @@ extension UIViewController {
             }
         }
         
-        if let delegate = self.navigationItemDelegate {
-            delegate.viewControllerShouldDismiss(self, block: { (should) in
+        if let shouldDismiss = self.navigationItemDelegate?.viewControllerShouldDismiss {
+            shouldDismiss(self, block: { (should) in
                 if should { dismiss() }
             })
         } else {
-            dismiss()
+            if viewShouldDismiss() { dismiss() }
         }
         
+    }
+    
+    public func viewShouldDismiss() -> Bool {
+        return true
     }
 }
 
