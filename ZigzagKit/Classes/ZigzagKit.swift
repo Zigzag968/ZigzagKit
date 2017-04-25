@@ -7,14 +7,26 @@
 //
 
 import UIKit
+import AssociatedValues
 
 private var hideNavigationBarKey: UInt8 = 0
 private var invisibleNavigationBarKey: UInt8 = 0
 
 private var navigationItemDelegateKey: UInt8 = 0
 
-@objc public protocol ZGNavigationItemDelegate : NSObjectProtocol {
-    func viewController(_ viewController:UIViewController, shouldDisplayBackButton button:UIBarButtonItem) -> Bool
+@objc
+public protocol ZGNavigationItemDelegate : NSObjectProtocol {
+    @objc optional func viewController(viewController:UIViewController, shouldDisplayBackButton button:UIBarButtonItem) -> Bool
+    
+    /**
+     viewControllerShouldDismiss
+     
+     This method is a delegate for showPreviousController() that needs to be called before
+     
+     - Parameter viewController: The viewController to dismiss
+     
+     */
+    @objc optional func viewControllerShouldDismiss(viewController:UIViewController, block:(Bool)->())
     
     /**
      backButtonForViewController
@@ -23,14 +35,14 @@ private var navigationItemDelegateKey: UInt8 = 0
      
      - Returns: Un UIBarbuttonItem pouvant overridé celui par défaut
      */
-    func backButtonForViewController(_ viewController:UIViewController) -> UIBarButtonItem?
-    @objc optional func backButtonColorForViewController(_ viewController:UIViewController) -> UIColor?
+    @objc optional func backButtonForViewController(viewController:UIViewController) -> UIBarButtonItem?
+    @objc optional func backButtonColorForViewController(viewController:UIViewController) -> UIColor?
     
 }
 
 
-public extension UIViewController {
-    var hideNavigationBar: Bool {
+extension UIViewController {
+    public var hideNavigationBar: Bool {
         get {
             let str = objc_getAssociatedObject(self, &hideNavigationBarKey) as? NSString
             if (str == "1") {
@@ -48,7 +60,7 @@ public extension UIViewController {
     }
     
     
-    var invisibleNavigationBar: Bool? {
+    public var invisibleNavigationBar: Bool? {
         get {
             let str = objc_getAssociatedObject(self, &invisibleNavigationBarKey) as? NSString
             if (str == "1") {
@@ -75,7 +87,7 @@ public extension UIViewController {
         }
     }
     
-    static public func topMostController() -> UIViewController? {
+    public static func topMostController() -> UIViewController? {
         var topController = UIApplication.shared.keyWindow?.rootViewController
         
         while let VC = topController?.presentedViewController {
@@ -84,22 +96,40 @@ public extension UIViewController {
         
         return topController
     }
-    public func  showPreviousController(_ animated:Bool = true, completionBlock: ((_ previousController:UIViewController?) -> Void)? = nil) {
-        if let navC = self.navigationController {
-            
-            CATransaction.begin()
-            CATransaction.setCompletionBlock({ () -> Void in
-                let vc = navC.viewControllers.last
-                completionBlock?(vc)
-            })
-            navC.popViewController(animated: animated)
-            CATransaction.commit()
+    
+    public func showPreviousController(animated:Bool = true, completionBlock: ((_ previousController:UIViewController?) -> Void)? = nil) {
+        
+        // let topMostViewController = self.navigationController?.viewControllers.last ?? self.presentedViewController
+        
+        func dismiss() {
+            if let navC = self.navigationController, navC.viewControllers.count > 1 && navC.topViewController == self {
+                CATransaction.begin()
+                CATransaction.setCompletionBlock({ () -> Void in
+                    let vc = navC.viewControllers.last
+                    completionBlock?(vc)
+                })
+                navC.popViewController(animated: animated)
+                CATransaction.commit()
+            }
+            else if let presentingViewController = self.presentingViewController {
+                presentingViewController.dismiss(animated: animated, completion: { () -> Void in
+                    completionBlock?(presentingViewController)
+                })
+            }
         }
-        else if let presentingViewController = self.presentingViewController {
-            presentingViewController.dismiss(animated: animated, completion: { () -> Void in
-                completionBlock?(presentingViewController)
+        
+        if let shouldDismiss = self.navigationItemDelegate?.viewControllerShouldDismiss {
+            shouldDismiss(self, { (should) in
+                if should { dismiss() }
             })
+        } else {
+            if viewShouldDismiss() { dismiss() }
         }
+        
+    }
+    
+    public func viewShouldDismiss() -> Bool {
+        return true
     }
 }
 
@@ -114,25 +144,110 @@ public protocol Storyboarded : NSObjectProtocol {
 
 extension Storyboarded  {
     
-    static public func createFromStoryboard() -> VCType {
+    public static func createFromStoryboard() -> VCType {
         return UIStoryboard(name: storyboardName, bundle: nil).instantiateViewController(withIdentifier: storyboardViewControllerIdentifier) as! VCType
     }
 }
 
 public protocol ReusableCell : class {
     static var reuseIdentifier : String { get }
+    static var cellNibName : String? { get }
+}
+
+extension UIScrollView {
+    var _beforeAdjustTopInset : CGFloat? {
+        get { return getAssociatedValue(key: "_beforeAdjustTopInset", object: self) }
+        set { set(associatedValue: newValue, key: "_beforeAdjustTopInset", object: self) }
+    }
+    
+    var _beforeAdjustBottomInset : CGFloat? {
+        get { return getAssociatedValue(key: "_beforeAdjustBottomInset", object: self) }
+        set { set(associatedValue: newValue, key: "_beforeAdjustBottomInset", object: self) }
+    }
+    
+    public enum Edge {
+        case Top, Bottom
+    }
+    
+    private func adjustInsetEdgeWithLayoutGuide(layoutGuide:UILayoutSupport, edge:Edge) {
+        
+        let inset = layoutGuide.length
+        setInsetForEdge(inset: inset, edge: edge)
+    }
+    
+    private func setInsetForEdge(inset:CGFloat, edge:Edge) {
+        
+        var insets = self.contentInset
+        
+        switch edge {
+        case .Top:
+            _beforeAdjustTopInset = _beforeAdjustTopInset ?? insets.top
+            insets.top = inset + _beforeAdjustTopInset!
+            break
+        case .Bottom:
+            _beforeAdjustBottomInset = _beforeAdjustBottomInset ?? insets.bottom
+            insets.bottom = inset + _beforeAdjustBottomInset!
+            break
+        }
+        
+        self.contentInset = insets
+        self.scrollIndicatorInsets = insets
+    }
+    
+    public func adjustBottomInsetsWithBottomLayoutGuide(layoutGuide:UILayoutSupport) {
+        self.adjustInsetEdgeWithLayoutGuide(layoutGuide: layoutGuide, edge: .Bottom)
+    }
+    
+    public func adjustTopInsetsWithTopLayoutGuide(layoutGuide:UILayoutSupport) {
+        self.adjustInsetEdgeWithLayoutGuide(layoutGuide: layoutGuide, edge: .Top)
+    }
+    
+    public func setTopInset(inset:CGFloat) {
+        self.setInsetForEdge(inset: inset, edge: .Top)
+    }
+    
+    public func setBottomInset(inset:CGFloat) {
+        self.setInsetForEdge(inset: inset, edge: .Bottom)
+    }
+    
+    public func scrollToBottom() {
+        let bottomOffset = CGPoint(x: 0, y: self.contentSize.height - self.bounds.size.height)
+        if bottomOffset.y > 0 {
+            self.setContentOffset(bottomOffset, animated: true)
+        }
+    }
 }
 
 extension UITableView {
-    public func registerClass<Cell:AnyObject>(_ cellClass: Cell.Type?) where Cell:ReusableCell {
+    
+    public func registerNibForClass<Cell:AnyObject>(cellClass: Cell.Type?, nibName:String?=nil) where Cell:ReusableCell {
+        self.register(UINib(nibName: nibName ?? Cell.cellNibName ?? String(describing: cellClass!), bundle: nil), forCellReuseIdentifier: Cell.reuseIdentifier)
+    }
+    
+    public func registerClass<Cell:AnyObject>(cellClass: Cell.Type?) where Cell:ReusableCell {
         self.register(cellClass.self, forCellReuseIdentifier: Cell.reuseIdentifier)
     }
     
-    public func dequeueReusableCellWithClass<Cell:AnyObject>(_ cellClass: Cell.Type, forIndexPath indexPath: IndexPath) -> Cell where Cell:ReusableCell {
-        
+    public func dequeueReusableCellWithClass<Cell:AnyObject>(cellClass: Cell.Type, for indexPath: IndexPath) -> Cell where Cell:ReusableCell {
+
         return self.dequeueReusableCell(withIdentifier: Cell.reuseIdentifier, for: indexPath) as! Cell
     }
+}
+
+extension UICollectionView {
     
+    public func registerNibForClass<Cell:AnyObject>(cellClass: Cell.Type?, nibName:String?=nil) where Cell:ReusableCell {
+        self.register(UINib(nibName: nibName ?? Cell.cellNibName ?? String(describing: cellClass!), bundle: nil), forCellWithReuseIdentifier: Cell.reuseIdentifier)
+    }
+    
+    public func registerClass<Cell:AnyObject>(cellClass: Cell.Type?) where Cell:ReusableCell {
+        self.register(cellClass.self, forCellWithReuseIdentifier: Cell.reuseIdentifier)
+    }
+    
+    public func dequeueReusableCell<Cell:AnyObject>(cellClass: Cell.Type, for indexPath: IndexPath) -> Cell where Cell:ReusableCell
+    {
+        return self.dequeueReusableCell(withReuseIdentifier: Cell.reuseIdentifier, for: indexPath) as! Cell
+    }
 }
 
 public class ZGContentView : UIView {
@@ -141,8 +256,8 @@ public class ZGContentView : UIView {
     
     public let contentView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
     
-    fileprivate(set) var edgesConstraints = [Edge:NSLayoutConstraint]()
-    fileprivate var maskingViewController : UIViewController!
+    private(set) var edgesConstraints = [Edge:NSLayoutConstraint]()
+    private var maskingViewController : UIViewController!
     
     required public init(viewController:UIViewController) {
         super.init(frame: CGRect.zero)
@@ -188,4 +303,84 @@ public class ZGContentView : UIView {
         maskingViewController.view.addConstraint(bottomGuideConstraint)
     }
     
+}
+
+extension UIView {
+    public func addBorder(edges: UIRectEdge, colour: UIColor = UIColor.white, thickness: CGFloat = 1) -> [UIView] {
+        
+        var borders = [UIView]()
+        
+        func border() -> UIView {
+            let border = UIView(frame: CGRect.zero)
+            border.backgroundColor = colour
+            border.translatesAutoresizingMaskIntoConstraints = false
+            return border
+        }
+        
+        if edges.contains(.top) || edges.contains(.all) {
+            let top = border()
+            addSubview(top)
+            addConstraints(
+                NSLayoutConstraint.constraints(withVisualFormat: "V:|-(0)-[top(==thickness)]",
+                    options: [],
+                    metrics: ["thickness": thickness],
+                    views: ["top": top]))
+            addConstraints(
+                NSLayoutConstraint.constraints(withVisualFormat: "H:|-(0)-[top]-(0)-|",
+                    options: [],
+                    metrics: nil,
+                    views: ["top": top]))
+            borders.append(top)
+        }
+        
+        if edges.contains(.left) || edges.contains(.all) {
+            let left = border()
+            addSubview(left)
+            addConstraints(
+                NSLayoutConstraint.constraints(withVisualFormat: "H:|-(0)-[left(==thickness)]",
+                    options: [],
+                    metrics: ["thickness": thickness],
+                    views: ["left": left]))
+            addConstraints(
+                NSLayoutConstraint.constraints(withVisualFormat: "V:|-(0)-[left]-(0)-|",
+                    options: [],
+                    metrics: nil,
+                    views: ["left": left]))
+            borders.append(left)
+        }
+        
+        if edges.contains(.right) || edges.contains(.all) {
+            let right = border()
+            addSubview(right)
+            addConstraints(
+                NSLayoutConstraint.constraints(withVisualFormat: "H:[right(==thickness)]-(0)-|",
+                    options: [],
+                    metrics: ["thickness": thickness],
+                    views: ["right": right]))
+            addConstraints(
+                NSLayoutConstraint.constraints(withVisualFormat: "V:|-(0)-[right]-(0)-|",
+                    options: [],
+                    metrics: nil,
+                    views: ["right": right]))
+            borders.append(right)
+        }
+        
+        if edges.contains(.bottom) || edges.contains(.all) {
+            let bottom = border()
+            addSubview(bottom)
+            addConstraints(
+                NSLayoutConstraint.constraints(withVisualFormat: "V:[bottom(==thickness)]-(0)-|",
+                    options: [],
+                    metrics: ["thickness": thickness],
+                    views: ["bottom": bottom]))
+            addConstraints(
+                NSLayoutConstraint.constraints(withVisualFormat: "H:|-(0)-[bottom]-(0)-|",
+                    options: [],
+                    metrics: nil,
+                    views: ["bottom": bottom]))
+            borders.append(bottom)
+        }
+        
+        return borders
+    }
 }
