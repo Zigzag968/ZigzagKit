@@ -215,6 +215,7 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = V5NMHA9ATC;
 						LastSwiftMigration = 0830;
 					};
 					607FACE41AFB9204008FA782 = {
@@ -491,6 +492,7 @@
 			baseConfigurationReference = 2A01DCE9F16AC6DCE9BA23A5 /* Pods-ZigzagKit_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = V5NMHA9ATC;
 				INFOPLIST_FILE = ZigzagKit/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
@@ -505,6 +507,7 @@
 			baseConfigurationReference = B5047F6E75C7F6025F118FCD /* Pods-ZigzagKit_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = V5NMHA9ATC;
 				INFOPLIST_FILE = ZigzagKit/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;

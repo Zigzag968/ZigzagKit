@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ZigzagKit'
-  s.version          = '2.0.0'
+  s.version          = '2.0.2'
   s.summary          = 'A short description of ZigzagKit.'
 
 # This description is used to generate tags and improve search results.
@@ -39,7 +39,6 @@ TODO: Add long description of the pod here.
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
   # s.dependency 'AFNetworking', '~> 2.3'
-s.dependency 'ZGTooltipView', '2'
 s.dependency 'AssociatedValues', "3.0.0"
 
 end

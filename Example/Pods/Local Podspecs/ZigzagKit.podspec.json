@@ -20,9 +20,6 @@
   },
   "source_files": "ZigzagKit/Classes/**/*",
   "dependencies": {
-    "ZGTooltipView": [
-      "2"
-    ],
     "AssociatedValues": [
       "3.0.0"
     ]
