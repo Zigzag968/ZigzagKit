@@ -1,6 +1,6 @@
 PODS:
   - AssociatedValues (3.0.0)
-  - ZigzagKit (2.0.0):
+  - ZigzagKit (2.0.2):
     - AssociatedValues (= 3.0.0)
 
 DEPENDENCIES:
@@ -13,8 +13,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AssociatedValues: 5c29f5c0bb2672cf9ef0394bcbe3ce28b9fa0c2a
-  ZigzagKit: d22bc1f585ff62d5606157fd678541330448eceb
+  ZigzagKit: 3092c5626768fc4a137ebd750576c6ccfde129da
 
-PODFILE CHECKSUM: 88a6a4b169ef2a19617666090e79a20241cc5de0
+PODFILE CHECKSUM: e409d04ea72f57ea2b65e657d31656e694be132c
 
 COCOAPODS: 1.1.1
