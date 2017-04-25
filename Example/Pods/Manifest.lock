@@ -7,6 +7,7 @@ PODS:
 
 DEPENDENCIES:
   - AssociatedValues (= 3.0.0)
+  - ZGTooltipView (= 2)
   - ZigzagKit (from `../`)
 
 EXTERNAL SOURCES:
@@ -18,6 +19,6 @@ SPEC CHECKSUMS:
   ZGTooltipView: a96a4e2540334cfcdb81bfa6fa27642e890ef6e7
   ZigzagKit: fd568ac24bb145d7c9411cecffb236d9110f6c12
 
-PODFILE CHECKSUM: 88a6a4b169ef2a19617666090e79a20241cc5de0
+PODFILE CHECKSUM: 2fa3cb29dac07853dfb582a40e1da1c084562cbd
 
 COCOAPODS: 1.1.1
