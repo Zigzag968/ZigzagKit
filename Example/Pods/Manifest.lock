@@ -1,12 +1,12 @@
 PODS:
-  - PropertyExtensions (1.0.5)
-  - ZGTooltipView (1.2.8)
-  - ZigzagKit (1.1.3):
-    - PropertyExtensions
-    - ZGTooltipView (= 1.2.8)
+  - AssociatedValues (3.0.0)
+  - ZGTooltipView (2)
+  - ZigzagKit (2):
+    - AssociatedValues (= 3.0.0)
+    - ZGTooltipView (= 2)
 
 DEPENDENCIES:
-  - PropertyExtensions
+  - AssociatedValues (= 3.0.0)
   - ZigzagKit (from `../`)
 
 EXTERNAL SOURCES:
@@ -14,10 +14,10 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  PropertyExtensions: 9579012b8110ffd09b7bd99a166135410a1e0f84
-  ZGTooltipView: 7bdc12c12ea73d8fce4d4b53abcd2b5a9e25d6e9
-  ZigzagKit: 3ba9f72a355374c66c1f822209528f49556247d5
+  AssociatedValues: 5c29f5c0bb2672cf9ef0394bcbe3ce28b9fa0c2a
+  ZGTooltipView: a96a4e2540334cfcdb81bfa6fa27642e890ef6e7
+  ZigzagKit: e910fdc5ffb733abbd9ef7e93adeaaadbfeae0b8
 
-PODFILE CHECKSUM: 04192e5fdd5fd32dcf343488bbc1abf33a355a61
+PODFILE CHECKSUM: 88a6a4b169ef2a19617666090e79a20241cc5de0
 
 COCOAPODS: 1.1.1

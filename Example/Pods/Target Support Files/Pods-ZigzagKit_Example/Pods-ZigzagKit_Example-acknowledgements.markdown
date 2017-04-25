@@ -1,7 +1,7 @@
 # Acknowledgements
 This application makes use of the following third party libraries:
 
-## PropertyExtensions
+## AssociatedValues
 
 Copyright (c) 2014 Skyvive <brad@skyvive.com>
 

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import PropertyExtensions
+import AssociatedValues
 
 private var hideNavigationBarKey: UInt8 = 0
 private var invisibleNavigationBarKey: UInt8 = 0
@@ -16,7 +16,7 @@ private var navigationItemDelegateKey: UInt8 = 0
 
 @objc
 public protocol ZGNavigationItemDelegate : NSObjectProtocol {
-    optional func viewController(viewController:UIViewController, shouldDisplayBackButton button:UIBarButtonItem) -> Bool
+    @objc optional func viewController(viewController:UIViewController, shouldDisplayBackButton button:UIBarButtonItem) -> Bool
     
     /**
      viewControllerShouldDismiss
@@ -26,7 +26,7 @@ public protocol ZGNavigationItemDelegate : NSObjectProtocol {
      - Parameter viewController: The viewController to dismiss
      
      */
-    optional func viewControllerShouldDismiss(viewController:UIViewController, block:(Bool)->())
+    @objc optional func viewControllerShouldDismiss(viewController:UIViewController, block:(Bool)->())
     
     /**
      backButtonForViewController
@@ -35,8 +35,8 @@ public protocol ZGNavigationItemDelegate : NSObjectProtocol {
      
      - Returns: Un UIBarbuttonItem pouvant overridé celui par défaut
      */
-    optional func backButtonForViewController(viewController:UIViewController) -> UIBarButtonItem?
-    optional func backButtonColorForViewController(viewController:UIViewController) -> UIColor?
+    @objc optional func backButtonForViewController(viewController:UIViewController) -> UIBarButtonItem?
+    @objc optional func backButtonColorForViewController(viewController:UIViewController) -> UIColor?
     
 }
 
@@ -88,7 +88,7 @@ extension UIViewController {
     }
     
     public static func topMostController() -> UIViewController? {
-        var topController = UIApplication.sharedApplication().keyWindow?.rootViewController
+        var topController = UIApplication.shared.keyWindow?.rootViewController
         
         while let VC = topController?.presentedViewController {
             topController = VC
@@ -97,29 +97,29 @@ extension UIViewController {
         return topController
     }
     
-    public func showPreviousController(animated:Bool = true, completionBlock: ((previousController:UIViewController?) -> Void)? = nil) {
+    public func showPreviousController(animated:Bool = true, completionBlock: ((_ previousController:UIViewController?) -> Void)? = nil) {
         
         // let topMostViewController = self.navigationController?.viewControllers.last ?? self.presentedViewController
         
         func dismiss() {
-            if let navC = self.navigationController where navC.viewControllers.count > 1 && navC.topViewController == self {
+            if let navC = self.navigationController, navC.viewControllers.count > 1 && navC.topViewController == self {
                 CATransaction.begin()
                 CATransaction.setCompletionBlock({ () -> Void in
                     let vc = navC.viewControllers.last
-                    completionBlock?(previousController: vc)
+                    completionBlock?(vc)
                 })
-                navC.popViewControllerAnimated(animated)
+                navC.popViewController(animated: animated)
                 CATransaction.commit()
             }
             else if let presentingViewController = self.presentingViewController {
-                presentingViewController.dismissViewControllerAnimated(animated, completion: { () -> Void in
-                    completionBlock?(previousController: presentingViewController)
+                presentingViewController.dismiss(animated: animated, completion: { () -> Void in
+                    completionBlock?(presentingViewController)
                 })
             }
         }
         
         if let shouldDismiss = self.navigationItemDelegate?.viewControllerShouldDismiss {
-            shouldDismiss(self, block: { (should) in
+            shouldDismiss(self, { (should) in
                 if should { dismiss() }
             })
         } else {
@@ -145,7 +145,7 @@ public protocol Storyboarded : NSObjectProtocol {
 extension Storyboarded  {
     
     public static func createFromStoryboard() -> VCType {
-        return UIStoryboard(name: storyboardName, bundle: nil).instantiateViewControllerWithIdentifier(storyboardViewControllerIdentifier) as! VCType
+        return UIStoryboard(name: storyboardName, bundle: nil).instantiateViewController(withIdentifier: storyboardViewControllerIdentifier) as! VCType
     }
 }
 
@@ -154,15 +154,15 @@ public protocol ReusableCell : class {
     static var cellNibName : String? { get }
 }
 
-extension UIScrollView : PropertyExtensions {
+extension UIScrollView {
     var _beforeAdjustTopInset : CGFloat? {
-        get { return self.getProperty("_beforeAdjustTopInset") }
-        set { self.setValue(newValue, forProperty: "_beforeAdjustTopInset") }
+        get { return getAssociatedValue(key: "_beforeAdjustTopInset", object: self) }
+        set { set(associatedValue: newValue, key: "_beforeAdjustTopInset", object: self) }
     }
     
     var _beforeAdjustBottomInset : CGFloat? {
-        get { return self.getProperty("_beforeAdjustBottomInset") }
-        set { self.setValue(newValue, forProperty: "_beforeAdjustBottomInset") }
+        get { return getAssociatedValue(key: "_beforeAdjustBottomInset", object: self) }
+        set { set(associatedValue: newValue, key: "_beforeAdjustBottomInset", object: self) }
     }
     
     public enum Edge {
@@ -172,7 +172,7 @@ extension UIScrollView : PropertyExtensions {
     private func adjustInsetEdgeWithLayoutGuide(layoutGuide:UILayoutSupport, edge:Edge) {
         
         let inset = layoutGuide.length
-        setInsetForEdge(inset, edge: edge)
+        setInsetForEdge(inset: inset, edge: edge)
     }
     
     private func setInsetForEdge(inset:CGFloat, edge:Edge) {
@@ -195,19 +195,19 @@ extension UIScrollView : PropertyExtensions {
     }
     
     public func adjustBottomInsetsWithBottomLayoutGuide(layoutGuide:UILayoutSupport) {
-        self.adjustInsetEdgeWithLayoutGuide(layoutGuide, edge: .Bottom)
+        self.adjustInsetEdgeWithLayoutGuide(layoutGuide: layoutGuide, edge: .Bottom)
     }
     
     public func adjustTopInsetsWithTopLayoutGuide(layoutGuide:UILayoutSupport) {
-        self.adjustInsetEdgeWithLayoutGuide(layoutGuide, edge: .Top)
+        self.adjustInsetEdgeWithLayoutGuide(layoutGuide: layoutGuide, edge: .Top)
     }
     
     public func setTopInset(inset:CGFloat) {
-        self.setInsetForEdge(inset, edge: .Top)
+        self.setInsetForEdge(inset: inset, edge: .Top)
     }
     
     public func setBottomInset(inset:CGFloat) {
-        self.setInsetForEdge(inset, edge: .Bottom)
+        self.setInsetForEdge(inset: inset, edge: .Bottom)
     }
     
     public func scrollToBottom() {
@@ -220,33 +220,33 @@ extension UIScrollView : PropertyExtensions {
 
 extension UITableView {
     
-    public func registerNibForClass<Cell:AnyObject where Cell:ReusableCell>(cellClass: Cell.Type?, nibName:String?=nil) {
-        self.registerNib(UINib(nibName: nibName ?? Cell.cellNibName ?? String(cellClass!), bundle: nil), forCellReuseIdentifier: Cell.reuseIdentifier)
+    public func registerNibForClass<Cell:AnyObject>(cellClass: Cell.Type?, nibName:String?=nil) where Cell:ReusableCell {
+        self.register(UINib(nibName: nibName ?? Cell.cellNibName ?? String(describing: cellClass!), bundle: nil), forCellReuseIdentifier: Cell.reuseIdentifier)
     }
     
-    public func registerClass<Cell:AnyObject where Cell:ReusableCell>(cellClass: Cell.Type?) {
-        self.registerClass(cellClass.self, forCellReuseIdentifier: Cell.reuseIdentifier)
+    public func registerClass<Cell:AnyObject>(cellClass: Cell.Type?) where Cell:ReusableCell {
+        self.register(cellClass.self, forCellReuseIdentifier: Cell.reuseIdentifier)
     }
     
-    public func dequeueReusableCellWithClass<Cell:AnyObject where Cell:ReusableCell>(cellClass: Cell.Type, forIndexPath indexPath: NSIndexPath) -> Cell {
-        
-        return self.dequeueReusableCellWithIdentifier(Cell.reuseIdentifier, forIndexPath: indexPath) as! Cell
+    public func dequeueReusableCellWithClass<Cell:AnyObject>(cellClass: Cell.Type, for indexPath: IndexPath) -> Cell where Cell:ReusableCell {
+
+        return self.dequeueReusableCell(withIdentifier: Cell.reuseIdentifier, for: indexPath) as! Cell
     }
 }
 
 extension UICollectionView {
     
-    public func registerNibForClass<Cell:AnyObject where Cell:ReusableCell>(cellClass: Cell.Type?, nibName:String?=nil) {
-        self.registerNib(UINib(nibName: nibName ?? Cell.cellNibName ?? String(cellClass!), bundle: nil), forCellWithReuseIdentifier: Cell.reuseIdentifier)
+    public func registerNibForClass<Cell:AnyObject>(cellClass: Cell.Type?, nibName:String?=nil) where Cell:ReusableCell {
+        self.register(UINib(nibName: nibName ?? Cell.cellNibName ?? String(describing: cellClass!), bundle: nil), forCellWithReuseIdentifier: Cell.reuseIdentifier)
     }
     
-    public func registerClass<Cell:AnyObject where Cell:ReusableCell>(cellClass: Cell.Type?) {
-        self.registerClass(cellClass.self, forCellWithReuseIdentifier: Cell.reuseIdentifier)
+    public func registerClass<Cell:AnyObject>(cellClass: Cell.Type?) where Cell:ReusableCell {
+        self.register(cellClass.self, forCellWithReuseIdentifier: Cell.reuseIdentifier)
     }
     
-    public func dequeueReusableCellWithClass<Cell:AnyObject where Cell:ReusableCell>(cellClass: Cell.Type, forIndexPath indexPath: NSIndexPath) -> Cell {
-        
-        return self.dequeueReusableCellWithReuseIdentifier(Cell.reuseIdentifier, forIndexPath: indexPath) as! Cell
+    public func dequeueReusableCell<Cell:AnyObject>(cellClass: Cell.Type, for indexPath: IndexPath) -> Cell where Cell:ReusableCell
+    {
+        return self.dequeueReusableCell(withReuseIdentifier: Cell.reuseIdentifier, for: indexPath) as! Cell
     }
 }
 
@@ -260,7 +260,7 @@ public class ZGContentView : UIView {
     private var maskingViewController : UIViewController!
     
     required public init(viewController:UIViewController) {
-        super.init(frame: CGRectZero)
+        super.init(frame: CGRect.zero)
         self.maskingViewController = viewController
         setup()
     }
@@ -269,14 +269,14 @@ public class ZGContentView : UIView {
         self.contentView.translatesAutoresizingMaskIntoConstraints = false
         super.addSubview(self.contentView)
         
-        edgesConstraints[Edge.top] = NSLayoutConstraint(item: self, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 0)
+        edgesConstraints[Edge.top] = NSLayoutConstraint(item: self, attribute: .top, relatedBy: .equal, toItem: contentView, attribute: .top, multiplier: 1, constant: 0)
         edgesConstraints[Edge.top]?.priority = UILayoutPriorityDefaultHigh
         
-        edgesConstraints[Edge.bottom] = NSLayoutConstraint(item: self, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: 0)
+        edgesConstraints[Edge.bottom] = NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: contentView, attribute: .bottom, multiplier: 1, constant: 0)
         edgesConstraints[Edge.bottom]?.priority = UILayoutPriorityDefaultHigh
         
-        edgesConstraints[Edge.right] = NSLayoutConstraint(item: self, attribute: .Right, relatedBy: .Equal, toItem: contentView, attribute: .Right, multiplier: 1, constant: 0)
-        edgesConstraints[Edge.left] = NSLayoutConstraint(item: self, attribute: .Left, relatedBy: .Equal, toItem: contentView, attribute: .Left, multiplier: 1, constant: 0)
+        edgesConstraints[Edge.right] = NSLayoutConstraint(item: self, attribute: .right, relatedBy: .equal, toItem: contentView, attribute: .right, multiplier: 1, constant: 0)
+        edgesConstraints[Edge.left] = NSLayoutConstraint(item: self, attribute: .left, relatedBy: .equal, toItem: contentView, attribute: .left, multiplier: 1, constant: 0)
         
         edgesConstraints.forEach { (item) in
             self.addConstraint(item.1)
@@ -287,18 +287,18 @@ public class ZGContentView : UIView {
         super.init(coder: aDecoder)
     }
     
-    override public func addSubview(view: UIView) {
+    override public func addSubview(_ view: UIView) {
         self.contentView.addSubview(view)
     }
     
     override public func didMoveToSuperview() {
         super.didMoveToSuperview()
         
-        let topGuideConstraint = NSLayoutConstraint(item: self.contentView, attribute: .Top, relatedBy: .GreaterThanOrEqual, toItem: maskingViewController.topLayoutGuide, attribute: .Bottom, multiplier: 1, constant: 0)
+        let topGuideConstraint = NSLayoutConstraint(item: self.contentView, attribute: .top, relatedBy: .greaterThanOrEqual, toItem: maskingViewController.topLayoutGuide, attribute: .bottom, multiplier: 1, constant: 0)
         topGuideConstraint.priority = UILayoutPriorityRequired
         maskingViewController.view.addConstraint(topGuideConstraint)
         
-        let bottomGuideConstraint = NSLayoutConstraint(item:maskingViewController.bottomLayoutGuide, attribute: .Bottom, relatedBy: .GreaterThanOrEqual, toItem: self.contentView, attribute: .Top, multiplier: 1, constant: 0)
+        let bottomGuideConstraint = NSLayoutConstraint(item:maskingViewController.bottomLayoutGuide, attribute: .bottom, relatedBy: .greaterThanOrEqual, toItem: self.contentView, attribute: .top, multiplier: 1, constant: 0)
         bottomGuideConstraint.priority = UILayoutPriorityRequired
         maskingViewController.view.addConstraint(bottomGuideConstraint)
     }
@@ -306,75 +306,75 @@ public class ZGContentView : UIView {
 }
 
 extension UIView {
-    public func addBorder(edges edges: UIRectEdge, colour: UIColor = UIColor.whiteColor(), thickness: CGFloat = 1) -> [UIView] {
+    public func addBorder(edges: UIRectEdge, colour: UIColor = UIColor.white, thickness: CGFloat = 1) -> [UIView] {
         
         var borders = [UIView]()
         
         func border() -> UIView {
-            let border = UIView(frame: CGRectZero)
+            let border = UIView(frame: CGRect.zero)
             border.backgroundColor = colour
             border.translatesAutoresizingMaskIntoConstraints = false
             return border
         }
         
-        if edges.contains(.Top) || edges.contains(.All) {
+        if edges.contains(.top) || edges.contains(.all) {
             let top = border()
             addSubview(top)
             addConstraints(
-                NSLayoutConstraint.constraintsWithVisualFormat("V:|-(0)-[top(==thickness)]",
+                NSLayoutConstraint.constraints(withVisualFormat: "V:|-(0)-[top(==thickness)]",
                     options: [],
                     metrics: ["thickness": thickness],
                     views: ["top": top]))
             addConstraints(
-                NSLayoutConstraint.constraintsWithVisualFormat("H:|-(0)-[top]-(0)-|",
+                NSLayoutConstraint.constraints(withVisualFormat: "H:|-(0)-[top]-(0)-|",
                     options: [],
                     metrics: nil,
                     views: ["top": top]))
             borders.append(top)
         }
         
-        if edges.contains(.Left) || edges.contains(.All) {
+        if edges.contains(.left) || edges.contains(.all) {
             let left = border()
             addSubview(left)
             addConstraints(
-                NSLayoutConstraint.constraintsWithVisualFormat("H:|-(0)-[left(==thickness)]",
+                NSLayoutConstraint.constraints(withVisualFormat: "H:|-(0)-[left(==thickness)]",
                     options: [],
                     metrics: ["thickness": thickness],
                     views: ["left": left]))
             addConstraints(
-                NSLayoutConstraint.constraintsWithVisualFormat("V:|-(0)-[left]-(0)-|",
+                NSLayoutConstraint.constraints(withVisualFormat: "V:|-(0)-[left]-(0)-|",
                     options: [],
                     metrics: nil,
                     views: ["left": left]))
             borders.append(left)
         }
         
-        if edges.contains(.Right) || edges.contains(.All) {
+        if edges.contains(.right) || edges.contains(.all) {
             let right = border()
             addSubview(right)
             addConstraints(
-                NSLayoutConstraint.constraintsWithVisualFormat("H:[right(==thickness)]-(0)-|",
+                NSLayoutConstraint.constraints(withVisualFormat: "H:[right(==thickness)]-(0)-|",
                     options: [],
                     metrics: ["thickness": thickness],
                     views: ["right": right]))
             addConstraints(
-                NSLayoutConstraint.constraintsWithVisualFormat("V:|-(0)-[right]-(0)-|",
+                NSLayoutConstraint.constraints(withVisualFormat: "V:|-(0)-[right]-(0)-|",
                     options: [],
                     metrics: nil,
                     views: ["right": right]))
             borders.append(right)
         }
         
-        if edges.contains(.Bottom) || edges.contains(.All) {
+        if edges.contains(.bottom) || edges.contains(.all) {
             let bottom = border()
             addSubview(bottom)
             addConstraints(
-                NSLayoutConstraint.constraintsWithVisualFormat("V:[bottom(==thickness)]-(0)-|",
+                NSLayoutConstraint.constraints(withVisualFormat: "V:[bottom(==thickness)]-(0)-|",
                     options: [],
                     metrics: ["thickness": thickness],
                     views: ["bottom": bottom]))
             addConstraints(
-                NSLayoutConstraint.constraintsWithVisualFormat("H:|-(0)-[bottom]-(0)-|",
+                NSLayoutConstraint.constraints(withVisualFormat: "H:|-(0)-[bottom]-(0)-|",
                     options: [],
                     metrics: nil,
                     views: ["bottom": bottom]))
