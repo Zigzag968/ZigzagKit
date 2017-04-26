@@ -7,11 +7,9 @@
 //
 
 import UIKit
-import AssociatedValues
 
 private var hideNavigationBarKey: UInt8 = 0
 private var invisibleNavigationBarKey: UInt8 = 0
-
 private var navigationItemDelegateKey: UInt8 = 0
 
 @objc
@@ -154,15 +152,26 @@ public protocol ReusableCell : class {
     static var cellNibName : String? { get }
 }
 
+private var _beforeAdjustTopInsetKey: UInt8 = 0
+private var _beforeAdjustBottomInsetKey: UInt8 = 0
+
 extension UIScrollView {
     var _beforeAdjustTopInset : CGFloat? {
-        get { return getAssociatedValue(key: "_beforeAdjustTopInset", object: self) }
-        set { set(associatedValue: newValue, key: "_beforeAdjustTopInset", object: self) }
+        get {
+            return objc_getAssociatedObject(self, &_beforeAdjustTopInsetKey) as? CGFloat
+        }
+        set(newValue) {
+            objc_setAssociatedObject(self, &_beforeAdjustTopInsetKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
+        }
     }
     
     var _beforeAdjustBottomInset : CGFloat? {
-        get { return getAssociatedValue(key: "_beforeAdjustBottomInset", object: self) }
-        set { set(associatedValue: newValue, key: "_beforeAdjustBottomInset", object: self) }
+        get {
+            return objc_getAssociatedObject(self, &_beforeAdjustBottomInset) as? CGFloat
+        }
+        set(newValue) {
+            objc_setAssociatedObject(self, &_beforeAdjustBottomInset, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
+        }
     }
     
     public enum Edge {
