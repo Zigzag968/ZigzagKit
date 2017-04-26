@@ -30,17 +30,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		07C05493973CDEB1FE49FDAE57CDF20E /* ZigzagKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = ZigzagKit.framework; path = ZigzagKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		07C05493973CDEB1FE49FDAE57CDF20E /* ZigzagKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZigzagKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BB51E47B4B2D99B737506463BD847A7 /* ZigzagKit-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "ZigzagKit-prefix.pch"; sourceTree = "<group>"; };
 		152BA661E5F241377D2A5547BA13C9C7 /* Pods-ZigzagKit_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-ZigzagKit_Example-umbrella.h"; sourceTree = "<group>"; };
 		1C67F756CA18163089A69131091C145D /* Pods-ZigzagKit_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-ZigzagKit_Example-dummy.m"; sourceTree = "<group>"; };
-		1EEB67B025DA7137D6711F852DB1AA6D /* Pods-ZigzagKit_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-ZigzagKit_Example.modulemap"; sourceTree = "<group>"; };
+		1EEB67B025DA7137D6711F852DB1AA6D /* Pods-ZigzagKit_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-ZigzagKit_Example.modulemap"; sourceTree = "<group>"; };
 		30360BC526E6B4C9095536D1E82D5B6E /* ZigzagKit-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "ZigzagKit-dummy.m"; sourceTree = "<group>"; };
 		3C2D0084009CD46F8DB116F49068E233 /* Pods-ZigzagKit_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-ZigzagKit_Example-frameworks.sh"; sourceTree = "<group>"; };
 		3D3C448D5FDDB17FB564CD753CDB910A /* ZigzagKit.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = ZigzagKit.xcconfig; sourceTree = "<group>"; };
 		3FC2BC3C2E8D0C39FAE5D1F38E49BCBA /* Pods-ZigzagKit_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-ZigzagKit_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
-		41F3A6F5FECDF0473FDB199E5259924C /* ZigzagKit.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = ZigzagKit.modulemap; sourceTree = "<group>"; };
-		46F3B252FFAC000796BB5B3FFCF824E8 /* Pods_ZigzagKit_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_ZigzagKit_Example.framework; path = "Pods-ZigzagKit_Example.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		41F3A6F5FECDF0473FDB199E5259924C /* ZigzagKit.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = ZigzagKit.modulemap; sourceTree = "<group>"; };
+		46F3B252FFAC000796BB5B3FFCF824E8 /* Pods_ZigzagKit_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZigzagKit_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		47AA50FCF5CD5F3655333555F63A0D53 /* Pods-ZigzagKit_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-ZigzagKit_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		4C1827EC1A6C261B0B1C0BD93CB2D7A0 /* Pods-ZigzagKit_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-ZigzagKit_Example-acknowledgements.plist"; sourceTree = "<group>"; };
 		4DBB6E37D242506D73318AB76FAFD9BE /* Pods-ZigzagKit_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ZigzagKit_Example.release.xcconfig"; sourceTree = "<group>"; };
@@ -48,16 +48,16 @@
 		575169B22C37C123281B9AB26D92A3A6 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		63A32798485A5C3BE552F5C580D4FC56 /* Pods-ZigzagKit_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-ZigzagKit_Tests-dummy.m"; sourceTree = "<group>"; };
 		7A24AA4AFE194F810FD89241E57CB39B /* Pods-ZigzagKit_Tests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-ZigzagKit_Tests-resources.sh"; sourceTree = "<group>"; };
-		7F24497EEE6B343178F2C0ED8B8A1D3C /* Pods_ZigzagKit_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_ZigzagKit_Tests.framework; path = "Pods-ZigzagKit_Tests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7F24497EEE6B343178F2C0ED8B8A1D3C /* Pods_ZigzagKit_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZigzagKit_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		84F34A86117C2E4A6608B5CCAEF99273 /* Pods-ZigzagKit_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ZigzagKit_Tests.release.xcconfig"; sourceTree = "<group>"; };
-		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		94D5A5E207A09C326BE3476DD9E38232 /* Pods-ZigzagKit_Example-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-ZigzagKit_Example-resources.sh"; sourceTree = "<group>"; };
 		AC96760E94B785995126ECB345B659FA /* ZigzagKit-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "ZigzagKit-umbrella.h"; sourceTree = "<group>"; };
 		BB5D2C44DD2FD794259F111C8386FB41 /* Pods-ZigzagKit_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-ZigzagKit_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
 		CBB3DE36805AF21409EC968A9691732F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		CE05C7B78E05598954DA155F9202E269 /* Pods-ZigzagKit_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ZigzagKit_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		DD553253E21C10882962733BBE8DF2BF /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DF66CD06967EFA819825CBF49884C77A /* Pods-ZigzagKit_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-ZigzagKit_Tests.modulemap"; sourceTree = "<group>"; };
+		DF66CD06967EFA819825CBF49884C77A /* Pods-ZigzagKit_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-ZigzagKit_Tests.modulemap"; sourceTree = "<group>"; };
 		E664689CD5AF8664A8124ECC3434D1FE /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E9205465CA9231598AF5A389F1899476 /* ZigzagKit.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ZigzagKit.swift; sourceTree = "<group>"; };
 		EAD8521596DDCFD32C4114B38FE8E23F /* Pods-ZigzagKit_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-ZigzagKit_Tests-frameworks.sh"; sourceTree = "<group>"; };
@@ -123,7 +123,6 @@
 			children = (
 				E9205465CA9231598AF5A389F1899476 /* ZigzagKit.swift */,
 			);
-			name = Classes;
 			path = Classes;
 			sourceTree = "<group>";
 		};
@@ -161,7 +160,6 @@
 			children = (
 				435DB32D228AE52980B2222FA0EA58AC /* Classes */,
 			);
-			name = ZigzagKit;
 			path = ZigzagKit;
 			sourceTree = "<group>";
 		};
@@ -314,6 +312,11 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
 				LastUpgradeCheck = 0700;
+				TargetAttributes = {
+					1EA8960AC5E6688068C7FBD4161E9876 = {
+						LastSwiftMigration = 0830;
+					};
+				};
 			};
 			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 3.2";
