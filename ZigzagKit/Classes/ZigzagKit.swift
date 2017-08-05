@@ -82,7 +82,7 @@ extension UIViewController {
         }
     }
     
-    open func viewWillDismiss(shouldDismiss:(Bool)->()) {
+    open func viewWillDismiss(shouldDismiss:@escaping (Bool)->()) {
         shouldDismiss(true)
     }
 }
