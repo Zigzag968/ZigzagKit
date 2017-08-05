@@ -220,6 +220,7 @@
 					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = V5NMHA9ATC;
 						LastSwiftMigration = 0830;
 						TestTargetID = 607FACCF1AFB9204008FA782;
 					};
@@ -521,6 +522,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 47467E6A22A5032CD8F7D2F7 /* Pods-ZigzagKit_Tests.debug.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = V5NMHA9ATC;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -541,6 +543,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 425243F6F727DEB1714BB084 /* Pods-ZigzagKit_Tests.release.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = V5NMHA9ATC;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
