@@ -10,34 +10,6 @@ import UIKit
 
 private var hideNavigationBarKey: UInt8 = 0
 private var invisibleNavigationBarKey: UInt8 = 0
-private var navigationItemDelegateKey: UInt8 = 0
-
-@objc
-public protocol ZGNavigationItemDelegate : NSObjectProtocol {
-    @objc optional func viewController(_ viewController:UIViewController, shouldDisplayBackButton button:UIBarButtonItem) -> Bool
-    
-    /**
-     viewControllerShouldDismiss
-     
-     This method is a delegate for showPreviousController() that needs to be called before
-     
-     - Parameter viewController: The viewController to dismiss
-     
-     */
-    @objc optional func viewControllerShouldDismiss(_ viewController:UIViewController, block:(Bool)->())
-    
-    /**
-     backButtonForViewController
-     
-     - Parameter viewController: Le view controller qui se verra attaché le bouton
-     
-     - Returns: Un UIBarbuttonItem pouvant overridé celui par défaut
-     */
-    @objc optional func backButtonForViewController(_ viewController:UIViewController) -> UIBarButtonItem?
-    @objc optional func backButtonColorForViewController(_ viewController:UIViewController) -> UIColor?
-    
-}
-
 
 extension UIViewController {
     public var hideNavigationBar: Bool {
@@ -57,7 +29,6 @@ extension UIViewController {
         }
     }
     
-    
     public var invisibleNavigationBar: Bool? {
         get {
             let str = objc_getAssociatedObject(self, &invisibleNavigationBarKey) as? NSString
@@ -72,16 +43,6 @@ extension UIViewController {
                 str = "1"
             }
             objc_setAssociatedObject(self, &invisibleNavigationBarKey, str, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
-        }
-    }
-    
-    
-    public var navigationItemDelegate: ZGNavigationItemDelegate? {
-        get {
-            return objc_getAssociatedObject(self, &navigationItemDelegateKey) as? ZGNavigationItemDelegate
-        }
-        set(newValue) {
-            objc_setAssociatedObject(self, &navigationItemDelegateKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
         }
     }
     
@@ -116,18 +77,13 @@ extension UIViewController {
             }
         }
         
-        if let shouldDismiss = self.navigationItemDelegate?.viewControllerShouldDismiss {
-            shouldDismiss(self, { (should) in
-                if should { dismiss() }
-            })
-        } else {
-            if viewShouldDismiss() { dismiss() }
+        self.viewWillDismiss { (shouldDismiss) in
+            if (shouldDismiss) { dismiss() }
         }
-        
     }
     
-    public func viewShouldDismiss() -> Bool {
-        return true
+    public func viewWillDismiss(shouldDismiss:(Bool)->()) {
+        shouldDismiss(true)
     }
 }
 
