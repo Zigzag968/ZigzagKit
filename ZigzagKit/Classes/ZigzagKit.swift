@@ -235,10 +235,10 @@ open class ZGContentView : UIView {
         super.addSubview(self.contentView)
         
         edgesConstraints[Edge.top] = NSLayoutConstraint(item: self, attribute: .top, relatedBy: .equal, toItem: contentView, attribute: .top, multiplier: 1, constant: 0)
-        edgesConstraints[Edge.top]?.priority = UILayoutPriorityDefaultHigh
+        edgesConstraints[Edge.top]?.priority = UILayoutPriority.defaultHigh
         
         edgesConstraints[Edge.bottom] = NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: contentView, attribute: .bottom, multiplier: 1, constant: 0)
-        edgesConstraints[Edge.bottom]?.priority = UILayoutPriorityDefaultHigh
+        edgesConstraints[Edge.bottom]?.priority = UILayoutPriority.defaultHigh
         
         edgesConstraints[Edge.right] = NSLayoutConstraint(item: self, attribute: .right, relatedBy: .equal, toItem: contentView, attribute: .right, multiplier: 1, constant: 0)
         edgesConstraints[Edge.left] = NSLayoutConstraint(item: self, attribute: .left, relatedBy: .equal, toItem: contentView, attribute: .left, multiplier: 1, constant: 0)
@@ -260,11 +260,11 @@ open class ZGContentView : UIView {
         super.didMoveToSuperview()
         
         let topGuideConstraint = NSLayoutConstraint(item: self.contentView, attribute: .top, relatedBy: .greaterThanOrEqual, toItem: maskingViewController.topLayoutGuide, attribute: .bottom, multiplier: 1, constant: 0)
-        topGuideConstraint.priority = UILayoutPriorityRequired
+        topGuideConstraint.priority = UILayoutPriority.required
         maskingViewController.view.addConstraint(topGuideConstraint)
         
         let bottomGuideConstraint = NSLayoutConstraint(item:maskingViewController.bottomLayoutGuide, attribute: .bottom, relatedBy: .greaterThanOrEqual, toItem: self.contentView, attribute: .top, multiplier: 1, constant: 0)
-        bottomGuideConstraint.priority = UILayoutPriorityRequired
+        bottomGuideConstraint.priority = UILayoutPriority.required
         maskingViewController.view.addConstraint(bottomGuideConstraint)
     }
     
