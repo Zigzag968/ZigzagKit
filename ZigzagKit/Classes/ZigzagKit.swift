@@ -185,15 +185,15 @@ extension UIScrollView {
 
 extension UITableView {
     
-    public func registerNibForClass<Cell:AnyObject>(_ cellClass: Cell.Type?, nibName:String?=nil) where Cell:ReusableCell {
+    public func registerNibForClass<Cell>(_ cellClass: Cell.Type?, nibName:String?=nil) where Cell:ReusableCell {
         self.register(UINib(nibName: nibName ?? Cell.cellNibName ?? String(describing: cellClass!), bundle: nil), forCellReuseIdentifier: Cell.reuseIdentifier)
     }
     
-    public func registerClass<Cell:AnyObject>(_ cellClass: Cell.Type?) where Cell:ReusableCell {
+    public func registerClass<Cell>(_ cellClass: Cell.Type?) where Cell:ReusableCell {
         self.register(cellClass.self, forCellReuseIdentifier: Cell.reuseIdentifier)
     }
     
-    public func dequeueReusableCellWithClass<Cell:AnyObject>(_ cellClass: Cell.Type, for indexPath: IndexPath) -> Cell where Cell:ReusableCell {
+    public func dequeueReusableCellWithClass<Cell>(_ cellClass: Cell.Type, for indexPath: IndexPath) -> Cell where Cell:ReusableCell {
 
         return self.dequeueReusableCell(withIdentifier: Cell.reuseIdentifier, for: indexPath) as! Cell
     }
@@ -201,15 +201,15 @@ extension UITableView {
 
 extension UICollectionView {
     
-    public func registerNibForClass<Cell:AnyObject>(_ cellClass: Cell.Type?, nibName:String?=nil) where Cell:ReusableCell {
+    public func registerNibForClass<Cell>(_ cellClass: Cell.Type?, nibName:String?=nil) where Cell:ReusableCell {
         self.register(UINib(nibName: nibName ?? Cell.cellNibName ?? String(describing: cellClass!), bundle: nil), forCellWithReuseIdentifier: Cell.reuseIdentifier)
     }
     
-    public func registerClass<Cell:AnyObject>(_ cellClass: Cell.Type?) where Cell:ReusableCell {
+    public func registerClass<Cell>(_ cellClass: Cell.Type?) where Cell:ReusableCell {
         self.register(cellClass.self, forCellWithReuseIdentifier: Cell.reuseIdentifier)
     }
     
-    public func dequeueReusableCell<Cell:AnyObject>(_ cellClass: Cell.Type, for indexPath: IndexPath) -> Cell where Cell:ReusableCell
+    public func dequeueReusableCell<Cell>(_ cellClass: Cell.Type, for indexPath: IndexPath) -> Cell where Cell:ReusableCell
     {
         return self.dequeueReusableCell(withReuseIdentifier: Cell.reuseIdentifier, for: indexPath) as! Cell
     }
