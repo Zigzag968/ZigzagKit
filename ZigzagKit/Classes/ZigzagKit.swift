@@ -219,7 +219,7 @@ open class ZGContentView : UIView {
     
     enum Edge : Int { case top, left, right, bottom }
     
-    open let contentView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+    public let contentView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
     
     fileprivate(set) var edgesConstraints = [Edge:NSLayoutConstraint]()
     fileprivate var maskingViewController : UIViewController!

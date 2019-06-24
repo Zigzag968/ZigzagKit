@@ -1,7 +1,8 @@
 {
   "name": "ZigzagKit",
-  "version": "2.0.4",
+  "version": "3.1.0",
   "summary": "A short description of ZigzagKit.",
+  "swift_versions": "5.0",
   "description": "TODO: Add long description of the pod here.",
   "homepage": "https://github.com/Zigzag968/ZigzagKit",
   "license": {
@@ -13,10 +14,11 @@
   },
   "source": {
     "git": "https://github.com/Zigzag968/ZigzagKit.git",
-    "tag": "2.0.4"
+    "tag": "3.1.0"
   },
   "platforms": {
-    "ios": "9.0"
+    "ios": "10.0"
   },
-  "source_files": "ZigzagKit/Classes/**/*"
+  "source_files": "ZigzagKit/Classes/**/*",
+  "swift_version": "5.0"
 }
