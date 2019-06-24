@@ -1,16 +1,16 @@
 PODS:
-  - ZigzagKit (2.0.4)
+  - ZigzagKit (3.1.0)
 
 DEPENDENCIES:
   - ZigzagKit (from `../`)
 
 EXTERNAL SOURCES:
   ZigzagKit:
-    :path: ../
+    :path: "../"
 
 SPEC CHECKSUMS:
-  ZigzagKit: 18d9046147d435f3b0eeaa564861bf96a6e9e2de
+  ZigzagKit: 36f7628f5c3fb39302c02774df6e73f02a4423f4
 
-PODFILE CHECKSUM: 7a6c015252c389ea84f21dc2d7ec074e8e23531f
+PODFILE CHECKSUM: 5561cc8470bb1233f4cd09bc62283b948aad59a8
 
-COCOAPODS: 1.1.1
+COCOAPODS: 1.7.2
